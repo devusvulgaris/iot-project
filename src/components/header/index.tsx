@@ -5,7 +5,9 @@ import {
   NavbarContent,
   NavbarItem,
   Link,
-  Badge,
+  NavbarMenuToggle,
+  NavbarMenu,
+  NavbarMenuItem,
   Button,
   Chip,
 } from "@nextui-org/react";
@@ -17,12 +19,9 @@ import { getChipColor, getGradient } from "@/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLeaf } from "@fortawesome/free-solid-svg-icons";
 
-type Props = {};
-
-const Header = (props: Props) => {
+const Header = () => {
   const connectionStatus = useStore((store) => store.connectionStatus);
   const { connect, disconnect } = useMqttClient();
-
   return (
     <Navbar>
       <NavbarBrand>
@@ -32,10 +31,10 @@ const Header = (props: Props) => {
             className="mr-2 text-fuchsia-500"
             size="2x"
           />
-          Smart Mini Garden
+          <span className="hidden sm:flex">Smart Mini Garden</span>
         </NextLink>
       </NavbarBrand>
-      <NavbarContent>
+      <NavbarContent className="hidden sm:flex">
         <NavbarItem>
           <Link as={NextLink} href="/" color="foreground">
             Home
@@ -51,6 +50,36 @@ const Header = (props: Props) => {
         <Chip variant="dot" color={getChipColor(connectionStatus)}>
           {connectionStatus}
         </Chip>
+        <div className="hidden md:flex">
+          {connectionStatus === CONNECTION_STATUS.DISCONNECTED ? (
+            <Button
+              onClick={connect}
+              className={`bg-gradient-to-br text-white font-semibold ${getGradient(
+                "sublime"
+              )}`}
+            >
+              Connect
+            </Button>
+          ) : (
+            <Button onClick={disconnect} color="danger" variant="flat">
+              Disconnect
+            </Button>
+          )}
+        </div>
+      </NavbarContent>
+      <NavbarMenuToggle className="sm:hidden" />
+      <NavbarMenu>
+        <p className="font-semibold text-center text-2xl">Smart Mini Garden</p>
+        <NavbarMenuItem>
+          <Link as={NextLink} href="/" color="foreground">
+            Home
+          </Link>
+        </NavbarMenuItem>
+        <NavbarItem>
+          <Link as={NextLink} href="/about" color="foreground">
+            About
+          </Link>
+        </NavbarItem>
         {connectionStatus === CONNECTION_STATUS.DISCONNECTED ? (
           <Button
             onClick={connect}
@@ -65,7 +94,7 @@ const Header = (props: Props) => {
             Disconnect
           </Button>
         )}
-      </NavbarContent>
+      </NavbarMenu>
     </Navbar>
   );
 };
