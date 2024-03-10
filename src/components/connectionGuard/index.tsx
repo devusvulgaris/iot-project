@@ -7,6 +7,8 @@ import { getGradient } from "@/utils";
 import { Button, CircularProgress } from "@nextui-org/react";
 import useMqttClient from "@/hooks";
 import { type ReactNode } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlantWilt } from "@fortawesome/free-solid-svg-icons";
 
 type Props = {
   children: ReactNode;
@@ -37,11 +39,16 @@ const ConnectionGuard = ({ children }: Props) => {
     default:
       return (
         <div className="flex flex-col justify-center items-center h-full">
+          <FontAwesomeIcon
+            icon={faPlantWilt}
+            className="text-green-300 mb-4"
+            size="4x"
+          />
           <p className="text-xl mb-3">
             Client is not connected to mini garden. Please connect to device.
           </p>
           <Button
-            className={`text-white font-semibold text-large ${getGradient(
+            className={`text-white font-semibold text-large bg-gradient-to-br  ${getGradient(
               "sublime"
             )}`}
             onClick={connect}

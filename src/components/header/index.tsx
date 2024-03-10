@@ -54,7 +54,9 @@ const Header = (props: Props) => {
         {connectionStatus === CONNECTION_STATUS.DISCONNECTED ? (
           <Button
             onClick={connect}
-            className="bg-gradient-to-r text-white font-semibold from-rose-400 via-fuchsia-500 to-indigo-500"
+            className={`bg-gradient-to-br text-white font-semibold ${getGradient(
+              "sublime"
+            )}`}
           >
             Connect
           </Button>

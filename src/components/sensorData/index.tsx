@@ -1,5 +1,4 @@
 "use client";
-import { useState, useEffect } from "react";
 import CircularCard from "../circularCard";
 import TemperatureCard from "../temperatureCard";
 import useMqttClient from "@/hooks";
@@ -8,9 +7,7 @@ import { Button } from "@nextui-org/react";
 import { CONNECTION_STATUS } from "@/constants";
 import { getGradient } from "@/utils";
 
-type Props = {};
-
-const SensorData = (props: Props) => {
+const SensorData = () => {
   const { connect, disconnect, subscribe } = useMqttClient();
   const { connectionStatus, temperature, humidity, moisture } = useStore(
     ({ connectionStatus, temperature, humidity, moisture }) => ({
@@ -26,7 +23,7 @@ const SensorData = (props: Props) => {
       <div>
         <p>Please connect to device</p>
         <Button
-          className={` text-white ${getGradient("sublime")}`}
+          className={` text-white ${getGradient("snowflake")}`}
           onClick={connect}
         >
           Connect
@@ -45,12 +42,12 @@ const SensorData = (props: Props) => {
         <CircularCard
           label="Humidity"
           value={parseFloat(humidity)}
-          bgVariant="sublime"
+          bgVariant="hyper"
         />
         <CircularCard
           label="Soil moisture"
           value={parseFloat(moisture)}
-          bgVariant="sublime"
+          bgVariant=""
         />
       </div>
     </div>

@@ -44,7 +44,9 @@ const LedControlsection = () => {
         aria-label="Led state button"
         onClick={handleClick}
         color="primary"
-        className={`${getGradient("sublime")} text-white mt-5`}
+        className={`bg-gradient-to-br font-semibold ${getGradient(
+          "sublime"
+        )} text-white mt-5`}
       >
         {`Swith ${ledIsOn ? "off" : "on"}`}
       </Button>
