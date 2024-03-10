@@ -21,6 +21,7 @@ import {
   faBrain,
   faGem,
 } from "@fortawesome/free-solid-svg-icons";
+
 config.autoAddCss = false;
 library.add(faDiamond, faGem);
 
@@ -38,9 +39,11 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Providers>
-          <Header />
-          {children}
-          <Footer />
+          <div className="grid grid-rows-[auto_1fr_auto] min-h-screen">
+            <Header />
+            {children}
+            <Footer />
+          </div>
         </Providers>
       </body>
     </html>

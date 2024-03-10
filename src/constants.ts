@@ -5,6 +5,7 @@ export enum TOPICS {
   TEMPERATURE = `${ROOT_TOPIC}/temperature`,
   HUMIDITY = `${ROOT_TOPIC}/humidity`,
   MOISTURE = `${ROOT_TOPIC}/moisture`,
+  LED = `${ROOT_TOPIC}/led`,
 }
 
 export enum CONNECTION_STATUS {
@@ -12,4 +13,9 @@ export enum CONNECTION_STATUS {
   CONNECTING = "connecting",
   RECONNECTING = "reconnecting",
   DISCONNECTED = "disconnected",
+}
+
+export enum LED_MESSAGE {
+  ON = "ON",
+  OFF = "OFF",
 }

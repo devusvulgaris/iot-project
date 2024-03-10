@@ -13,7 +13,9 @@ import NextLink from "next/link";
 import useStore from "@/store";
 import useMqttClient from "@/hooks";
 import { CONNECTION_STATUS } from "@/constants";
-import { getChipColor } from "@/utils";
+import { getChipColor, getGradient } from "@/utils";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLeaf } from "@fortawesome/free-solid-svg-icons";
 
 type Props = {};
 
@@ -24,9 +26,16 @@ const Header = (props: Props) => {
   return (
     <Navbar>
       <NavbarBrand>
-        <NextLink href="/">Smart Mini Garden</NextLink>
+        <NextLink href="/" className="flex items-center">
+          <FontAwesomeIcon
+            icon={faLeaf}
+            className="mr-2 text-fuchsia-500"
+            size="2x"
+          />
+          Smart Mini Garden
+        </NextLink>
       </NavbarBrand>
-      <NavbarContent justify="center">
+      <NavbarContent>
         <NavbarItem>
           <Link as={NextLink} href="/" color="foreground">
             Home
@@ -43,7 +52,10 @@ const Header = (props: Props) => {
           {connectionStatus}
         </Chip>
         {connectionStatus === CONNECTION_STATUS.DISCONNECTED ? (
-          <Button onClick={connect} className="bg-fuchsia-500">
+          <Button
+            onClick={connect}
+            className="bg-gradient-to-r text-white font-semibold from-rose-400 via-fuchsia-500 to-indigo-500"
+          >
             Connect
           </Button>
         ) : (

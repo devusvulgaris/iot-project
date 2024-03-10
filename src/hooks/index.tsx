@@ -19,9 +19,9 @@ const options = {
 };
 
 export default function useMqttClient() {
-  const [client, setClient] = useState<MqttClient | null>(null);
-
   const {
+    client,
+    setClient,
     connectionStatus,
     setConnectionStatus,
     setTemperature,
@@ -29,12 +29,16 @@ export default function useMqttClient() {
     setMoisture,
   } = useStore(
     ({
+      client,
+      setClient,
       connectionStatus,
       setConnectionStatus,
       setTemperature,
       setHumidity,
       setMoisture,
     }) => ({
+      client,
+      setClient,
       connectionStatus,
       setConnectionStatus,
       setTemperature,
@@ -83,16 +87,22 @@ export default function useMqttClient() {
     [client]
   );
 
-  const publish = (context) => {
-    if (client) {
-      const { topic, qos = 0, payload } = context;
-      client.publish(topic, payload, { qos }, (error) => {
-        if (error) {
-          console.log("Publish error", error);
-        }
-      });
-    }
-  };
+  const publish = useCallback(
+    ({ topic, message }) => {
+      console.log("client??", client);
+      if (client) {
+        console.log("publishing??", client);
+        client.publish(topic, message, { qos: 0 }, (error) => {
+          if (error) {
+            console.log("Publish error", error);
+          }
+
+          console.log("published", topic, "message", message);
+        });
+      }
+    },
+    [client]
+  );
 
   useEffect(() => {
     if (client) {

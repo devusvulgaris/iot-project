@@ -7,9 +7,11 @@ import useStore from "@/store";
 import { Button } from "@nextui-org/react";
 import { CONNECTION_STATUS } from "@/constants";
 import { getGradient } from "@/utils";
+
 type Props = {};
 
-const Connector = (props: Props) => {
+const SensorData = (props: Props) => {
+  const { connect, disconnect, subscribe } = useMqttClient();
   const { connectionStatus, temperature, humidity, moisture } = useStore(
     ({ connectionStatus, temperature, humidity, moisture }) => ({
       connectionStatus,
@@ -19,14 +21,12 @@ const Connector = (props: Props) => {
     })
   );
 
-  const { connect, disconnect, subscribe } = useMqttClient();
-
   if (connectionStatus === CONNECTION_STATUS.DISCONNECTED) {
     return (
       <div>
         <p>Please connect to device</p>
         <Button
-          className={` text-white bg-gradient-to-r  ${getGradient("candy")}`}
+          className={` text-white ${getGradient("sublime")}`}
           onClick={connect}
         >
           Connect
@@ -36,25 +36,25 @@ const Connector = (props: Props) => {
   }
   return (
     <div>
-      <div className="my-5">
+      <div className="my-5 text-center">
         <h2 className="text-4xl mb-4">Smart Mini Garden</h2>
         <p>Data about temperature, air humididty and soil moisture.</p>
       </div>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid md:grid-cols-3 gap-4">
         <TemperatureCard value={temperature} bgVariant="snowflake" />
         <CircularCard
           label="Humidity"
           value={parseFloat(humidity)}
-          bgVariant=""
+          bgVariant="sublime"
         />
         <CircularCard
           label="Soil moisture"
           value={parseFloat(moisture)}
-          bgVariant=""
+          bgVariant="sublime"
         />
       </div>
     </div>
   );
 };
 
-export default Connector;
+export default SensorData;

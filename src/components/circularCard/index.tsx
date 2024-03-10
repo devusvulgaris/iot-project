@@ -14,9 +14,7 @@ type Props = {
 
 const CircularCard = ({ label, value, bgVariant }: Props) => {
   return (
-    <Card
-      className={`bg-fuchsia-500 bg-gradient-to-br ${getGradient(bgVariant)}`}
-    >
+    <Card className={`bg-primary ${getGradient(bgVariant)}`}>
       <CardBody className="justify-center items-center pb-0">
         <CircularProgress
           value={value}

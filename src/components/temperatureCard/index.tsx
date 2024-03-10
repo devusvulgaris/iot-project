@@ -23,7 +23,9 @@ const TemperatureCard = ({ value, bgVariant }: Props) => {
   const backroundVariant = getGradient(bgVariant);
 
   return (
-    <Card className={`bg-fuchsia-500 bg-gradient-to-br ${backroundVariant}`}>
+    <Card
+      className={`bg-fuchsia-500 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-rose-400 via-fuchsia-500 to-indigo-500`}
+    >
       <CardBody className="items-center">
         <FontAwesomeIcon
           icon={faTemperatureHalf}

@@ -1,6 +1,6 @@
 from machine import Pin, I2C, ADC
 from ssd1306 import SSD1306_I2C
-from time import sleep
+from time import time, sleep
 import network
 from umqtt.simple import MQTTClient, __version__
 import secrets
@@ -14,6 +14,8 @@ sensor = dht.DHT22(dht_pin)
 temperature_ad_pin = ADC(4)
 
 soil_sensor_ad_pin = ADC(26)
+
+led = Pin("LED", Pin.OUT)
 
 i2c = I2C(0, scl=Pin(17), sda=Pin(16), freq=200000)
 
@@ -111,25 +113,30 @@ password = secrets.EMQX_PASSWORD
 ssl_params = {"server_hostname": server}
 
 
-def sub_cb(topic, msg):
-    print((topic, msg))
-    if msg.decode() == "ON":
-        pass
+def subscribe_cb(topic, msg):
+    print("New message on topic {}".format(topic.decode('utf-8')))
+    print("Message", msg.decode())
+
+    if msg.decode('utf-8') == "ON":
+        led.value(1)
     else:
-        pass
+        led.value(0)
 
 
 ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
 ssl_context.verify_mode = ssl.CERT_NONE
 
+SUBSCRIBE_LED_TOPIC = "mini-garden/led"
+
 
 def connect_mqtt():
     mqtt_client = MQTTClient(client_id, server, port,
                              user, password, ssl=ssl_context)
-    mqtt_client.set_callback(sub_cb)
+    mqtt_client.set_callback(subscribe_cb)
 
     try:
         mqtt_client.connect()
+        mqtt_client.subscribe(SUBSCRIBE_LED_TOPIC)
         print(f"Connected to EMQX {server}")
         return mqtt_client
     except Exception as e:
@@ -145,6 +152,9 @@ def reconnect_mqtt():
 
 
 def main():
+    last_publish = time()
+    publish_interval = 5
+    
     connect_wlan()
 
     try:
@@ -154,29 +164,34 @@ def main():
         mqtt_client = reconnect_mqtt()
 
     while True:
-        temperature, humidity = read_dht_sensor()
+        mqtt_client.check_msg()
+        
+        if time() - last_publish >= publish_interval:
+            
+            temperature, humidity = read_dht_sensor()
 
-        display_temperature(temperature)
+            display_temperature(temperature)
 
-        moisture = measure_soil_moisture()
+            moisture = measure_soil_moisture()
 
-        root_topic = "mini-garden"
+            root_topic = "mini-garden"
 
-        temperature_topic = f"{root_topic}/temperature"
-        humidity_topic = f"{root_topic}/humidity"
-        moisture_topic = f"{root_topic}/moisture"
+            temperature_topic = f"{root_topic}/temperature"
+            humidity_topic = f"{root_topic}/humidity"
+            moisture_topic = f"{root_topic}/moisture"
 
-        if mqtt_client:
-            mqtt_client.publish(temperature_topic,
+            if mqtt_client:
+                mqtt_client.publish(temperature_topic,
                                 f"{temperature:.2f}")
-            mqtt_client.publish(humidity_topic, f"{humidity:.2f}")
-            mqtt_client.publish(moisture_topic, f"{moisture:.2f}")
+                mqtt_client.publish(humidity_topic, f"{humidity:.2f}")
+                mqtt_client.publish(moisture_topic, f"{moisture:.2f}")
 
-            print(f"Sending to MQTT app: {temperature_topic} -> {temperature}")
-            print(f"Sending to MQTT app: {humidity_topic} -> {humidity}")
-            print(f"Sending to MQTT app: {moisture_topic} -> {moisture}")
+                print(f"Sending to MQTT app: {temperature_topic} -> {temperature}")
+                print(f"Sending to MQTT app: {humidity_topic} -> {humidity}")
+                print(f"Sending to MQTT app: {moisture_topic} -> {moisture}")
+                last_publish = time()
 
-        sleep(5)
+        sleep(1)
 
 
 if __name__ == "__main__":
