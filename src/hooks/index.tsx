@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from "react";
-import mqtt, { type MqttClient } from "mqtt";
+import { useCallback, useEffect } from "react";
+import mqtt from "mqtt";
 import { CLIENT_ID, CONNECTION_STATUS, TOPICS } from "@/constants";
 import useStore from "@/store";
 
@@ -27,6 +27,7 @@ export default function useMqttClient() {
     setTemperature,
     setHumidity,
     setMoisture,
+    setIsSubscribed,
   } = useStore(
     ({
       client,
@@ -36,6 +37,7 @@ export default function useMqttClient() {
       setTemperature,
       setHumidity,
       setMoisture,
+      setIsSubscribed,
     }) => ({
       client,
       setClient,
@@ -44,6 +46,7 @@ export default function useMqttClient() {
       setTemperature,
       setHumidity,
       setMoisture,
+      setIsSubscribed,
     })
   );
 
@@ -81,10 +84,11 @@ export default function useMqttClient() {
             console.log("Subscribe to topic error:", error);
           }
           console.log(`Subscribed to topic ${topic}`);
+          setIsSubscribed(true);
         });
       }
     },
-    [client]
+    [client, setIsSubscribed]
   );
 
   const publish = useCallback(
@@ -140,7 +144,6 @@ export default function useMqttClient() {
 
   useEffect(() => {
     if (connectionStatus === CONNECTION_STATUS.CONNECTED) {
-      console.log("subscribing??");
       subscribe({
         topic: TOPICS.TEMPERATURE,
         qos: 0,

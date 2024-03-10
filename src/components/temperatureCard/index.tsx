@@ -1,9 +1,10 @@
-import React from "react";
-import { Card, CardBody, CardFooter, Chip } from "@nextui-org/react";
-
-import CardSkeleton from "@/components/cardSkeleton";
-import useStore from "@/store";
-import { CONNECTION_STATUS } from "@/constants";
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  Chip,
+  CircularProgress,
+} from "@nextui-org/react";
 import { getGradient } from "@/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTemperatureHalf } from "@fortawesome/free-solid-svg-icons";
@@ -12,42 +13,44 @@ type Props = {
   bgVariant: string;
 };
 
-const TemperatureCard = ({ value, bgVariant }: Props) => {
-  const { connectionStatus } = useStore(({ connectionStatus }) => ({
-    connectionStatus,
-  }));
-
-  if (connectionStatus !== CONNECTION_STATUS.CONNECTED) {
-    return <CardSkeleton />;
-  }
-  const backroundVariant = getGradient(bgVariant);
-
-  return (
-    <Card
-      className={`bg-fuchsia-500 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-rose-400 via-fuchsia-500 to-indigo-500`}
-    >
-      <CardBody className="items-center">
-        <FontAwesomeIcon
-          icon={faTemperatureHalf}
-          color="white"
-          size="4x"
-          className="mb-3 mt-4"
-        />
-        <p className="text-4xl text-white">{value}°C</p>
-      </CardBody>
-      <CardFooter className="justify-center items-center">
-        <Chip
+const TemperatureCard = ({ value, bgVariant }: Props) => (
+  <Card
+    // className={`bg-fuchsia-500 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-rose-400 via-fuchsia-500 to-indigo-500`}
+    className={`bg-fuchsia-500 bg-gradient-to-br from-rose-400 via-fuchsia-500 to-indigo-500`}
+  >
+    <CardBody className="items-center justify-center pb-0">
+      {value ? (
+        <>
+          <FontAwesomeIcon
+            icon={faTemperatureHalf}
+            color="white"
+            size="4x"
+            className="mb-3"
+          />
+          <p className="text-4xl text-white">{value}°C</p>
+        </>
+      ) : (
+        <CircularProgress
+          size="lg"
           classNames={{
-            base: "border-1 border-white/30",
-            content: "text-white/90 text-small font-semibold",
+            indicator: "stroke-white",
+            track: "stroke-white/10",
           }}
-          variant="bordered"
-        >
-          Temperature
-        </Chip>
-      </CardFooter>
-    </Card>
-  );
-};
+        />
+      )}
+    </CardBody>
+    <CardFooter className="justify-center items-center">
+      <Chip
+        classNames={{
+          base: "border-1 border-white/30",
+          content: "text-white/90 text-small font-semibold",
+        }}
+        variant="bordered"
+      >
+        Temperature
+      </Chip>
+    </CardFooter>
+  </Card>
+);
 
 export default TemperatureCard;

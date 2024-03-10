@@ -19,7 +19,7 @@ export const getGradient = (variant: string) => {
     case "sublime":
       return "from-rose-400 via-fuchsia-500 to-indigo-500";
     default:
-      return "bg-gradient-to-b from-amber-200 to-yellow-500";
+      return "from-amber-200 to-yellow-500";
   }
 };
 

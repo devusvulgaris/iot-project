@@ -4,7 +4,7 @@ type Props = {};
 
 const CardSkeleton = (props: Props) => {
   return (
-    <Card className="w-[200px] space-y-5 p-4">
+    <Card className="space-y-5 p-4">
       <Skeleton className="rounded-full">
         <div className="w-36 h-36 bg-default-300"></div>
       </Skeleton>
